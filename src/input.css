@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+@layer components {
+    .mystical-glass {
+        @apply bg-opacity-80 backdrop-blur-xl border border-white/10 shadow-xl;
+    }
+    
+    .primary-button {
+        @apply bg-gradient-to-r from-primary to-secondary text-white transition-all duration-200;
+    }
+    
+    .primary-button:hover {
+        @apply transform -translate-y-0.5 shadow-lg;
+    }
+}
+
+/* Your existing custom styles can go here */ 

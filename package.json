@@ -1,0 +1,27 @@
+{
+  "name": "dream-catcher-vanilla",
+  "version": "1.0.0",
+  "description": "Dream interpretation app using ChatGPT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build:css": "tailwindcss -i ./src/input.css -o ./styles.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./styles.css --minify"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.2",
+    "openai": "^4.20.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "nodemon": "^3.0.1",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
