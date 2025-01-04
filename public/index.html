@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Catcher</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Geist font -->
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Load Backendless SDK -->
+    <script src="https://api.backendless.com/sdk/js/latest/backendless.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script type="module" src="app.js"></script>
+    <style>
+        body {
+            font-family: 'Geist', sans-serif;
+        }
+
+        :root {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --primary: 217.2 91.2% 59.8%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 280 84% 56%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+            --ring: 224.3 76.3% 48%;
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground dark">
+    <!-- Main container -->
+    <div class="chat-container">
+        <!-- Mobile Header -->
+        <header class="fixed top-0 left-0 right-0 h-16 border-b border-gray-800 flex items-center justify-between px-4 bg-gray-900 mystical-glass z-50">
+            <div class="flex items-center space-x-4">
+                <button id="sidebar-toggle" class="p-2 hover:bg-gray-800 rounded-lg text-gray-400 md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <h2 class="text-lg font-semibold text-white" id="current-tab">Dream Catcher</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="new-chat" class="p-2 hover:bg-gray-800 rounded-lg text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar - Hidden on mobile by default -->
+        <aside class="fixed inset-y-0 left-0 w-full md:w-72 bg-gray-900 border-r border-gray-800 flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40">
+            <!-- Sidebar header -->
+            <div class="border-b border-gray-800 mt-16 md:mt-0">
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <nav class="p-2 border-b border-gray-800">
+                <div class="flex flex-col space-y-1">
+                    <button id="tab-dream" class="tab-button active px-4 py-3 rounded-lg text-left text-white hover:bg-gray-800 flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                        <span>Dream Catcher</span>
+                    </button>
+                    <button id="tab-journal" class="tab-button px-4 py-3 rounded-lg text-left text-gray-400 hover:bg-gray-800 flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <span>Journal</span>
+                    </button>
+                    <button id="tab-insight" class="tab-button px-4 py-3 rounded-lg text-left text-gray-400 hover:bg-gray-800 flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span>Insight</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Sidebar spacer -->
+            <div class="flex-1"></div>
+
+            <!-- User section -->
+            <div class="p-4 border-t border-gray-800">
+                <!-- Guest View (Default) -->
+                <div id="guest-view" class="space-y-4">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="avatar">
+                            <div class="w-4 h-4 rounded-full bg-gray-600"></div>
+                            <div class="avatar-status offline"></div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-white">Guest</p>
+                            <p class="text-sm text-gray-400">Please sign in</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Auth Buttons -->
+                    <div class="flex gap-2">
+                        <button id="show-login" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Login</button>
+                        <button id="show-register" class="flex-1 px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600">Register</button>
+                    </div>
+
+                    <!-- Login Form (Hidden by default) -->
+                    <form id="login-form" class="hidden space-y-3">
+                        <input type="email" id="login-email" placeholder="Email" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-white">
+                        <input type="password" id="login-password" placeholder="Password" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-white">
+                        <button type="submit" class="w-full px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Sign In</button>
+                    </form>
+
+                    <!-- Register Form (Hidden by default) -->
+                    <form id="register-form" class="hidden space-y-3">
+                        <input type="text" id="register-name" placeholder="Name" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-white">
+                        <input type="email" id="register-email" placeholder="Email" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-white">
+                        <input type="password" id="register-password" placeholder="Password" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-white">
+                        <button type="submit" class="w-full px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Create Account</button>
+                    </form>
+                </div>
+
+                <!-- Logged In View (Hidden by default) -->
+                <div id="user-view" class="hidden">
+                <div class="flex items-center space-x-3">
+                    <div class="avatar">
+                        <div class="w-4 h-4 rounded-full bg-blue-300"></div>
+                        <div class="avatar-status online"></div>
+                    </div>
+                    <div class="flex-1">
+                            <p class="font-medium text-white" id="user-name">User</p>
+                        <p class="text-sm text-gray-400">Online</p>
+                        </div>
+                        <button id="logout-btn" class="px-3 py-1 text-sm bg-gray-700 text-white rounded-md hover:bg-gray-600">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 flex flex-col bg-gray-900 mt-16 md:ml-72">
+            <!-- Content sections -->
+            <div class="flex-1 overflow-hidden">
+                <!-- Dream tab content -->
+                <div id="content-dream" class="tab-content active h-full flex flex-col">
+                    <div class="flex-1 overflow-auto p-4">
+                        <div class="chat-messages space-y-4 max-w-3xl mx-auto">
+                            <!-- Empty state -->
+                            <div class="empty-state text-center py-8 md:py-12">
+                                <h3 class="text-xl md:text-2xl font-bold text-white mb-4">Welcome to Dream Catcher</h3>
+                                <p class="text-gray-400 mb-8">Share your dreams and get insights from our AI</p>
+                                
+                                <!-- Suggested actions -->
+                                <div class="suggested-actions grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto px-4">
+                                    <button class="suggested-action mystical-glass p-4 md:p-6 rounded-lg text-left hover:bg-gray-800/50 transition-all">
+                                        <h4 class="text-white font-semibold mb-2">Share a Dream</h4>
+                                        <p class="text-gray-400 text-sm">Tell me about your recent dream and I'll help you understand it.</p>
+                                    </button>
+                                    <button class="suggested-action mystical-glass p-4 md:p-6 rounded-lg text-left hover:bg-gray-800/50 transition-all">
+                                        <h4 class="text-white font-semibold mb-2">Dream Journal</h4>
+                                        <p class="text-gray-400 text-sm">Keep track of your dreams and discover patterns over time.</p>
+                                    </button>
+                                    <button class="suggested-action mystical-glass p-4 md:p-6 rounded-lg text-left hover:bg-gray-800/50 transition-all">
+                                        <h4 class="text-white font-semibold mb-2">Get Insights</h4>
+                                        <p class="text-gray-400 text-sm">Analyze your dreams and uncover their hidden meanings.</p>
+                                    </button>
+                                    <button class="suggested-action mystical-glass p-4 md:p-6 rounded-lg text-left hover:bg-gray-800/50 transition-all">
+                                        <h4 class="text-white font-semibold mb-2">Dream Symbols</h4>
+                                        <p class="text-gray-400 text-sm">Learn about common dream symbols and their interpretations.</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input area -->
+                    <div class="border-t border-gray-800 p-4 fixed bottom-0 left-0 right-0 md:relative bg-gray-900">
+                        <div class="max-w-3xl mx-auto">
+                            <form id="message-form" class="flex gap-2 px-4">
+                                <input 
+                                    type="text" 
+                                    class="flex-1 p-3 md:p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800/50 border-gray-700 text-white mystical-glass"
+                                    placeholder="Share your dream..."
+                                >
+                                <button 
+                                    type="submit"
+                                    class="px-4 md:px-6 py-3 md:py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold primary-button"
+                                >
+                                    Send
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Journal tab content -->
+                <div id="content-journal" class="tab-content hidden h-full p-4">
+                    <div class="max-w-3xl mx-auto px-4">
+                        <!-- Sign in prompt (Hidden by default) -->
+                        <div id="journal-signin-prompt" class="hidden mx-4 mt-4 p-4 bg-black/20 mystical-glass rounded-lg mb-6">
+                            <div class="flex items-center gap-2 mb-3">
+                                <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                                <p class="text-sm text-white/80">Sign in to save your dream interpretations and notes.</p>
+                            </div>
+                            <button id="journal-signin-btn" class="ml-6 px-3 py-1 bg-white/5 hover:bg-white/10 text-white/80 rounded-md border border-white/10">
+                                Sign in
+                            </button>
+                        </div>
+
+                        <!-- Journal Content -->
+                        <div id="journal-content">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xl font-semibold text-white">Dream Journal</h3>
+                                <div class="flex gap-2">
+                                    <button id="filter-btn" class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 flex items-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                                        </svg>
+                                        Filter
+                                    </button>
+                                    <button id="search-btn" class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 flex items-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Journal Entries List -->
+                            <div id="journal-entries" class="space-y-4">
+                                <!-- Loading State -->
+                                <div id="journal-loading" class="hidden text-center py-8">
+                                    <div class="loading-spinner"></div>
+                                    <p class="text-gray-400 mt-2">Loading entries...</p>
+                                </div>
+
+                                <!-- Empty State -->
+                                <div id="journal-empty" class="hidden text-center py-8">
+                                    <p class="text-gray-400">Start a conversation in Dream Catcher to begin your dream journal!</p>
+                                </div>
+
+                                <!-- Entries List Container -->
+                                <div id="entries-list" class="space-y-4">
+                                    <!-- Entries will be inserted here -->
+                                </div>
+
+                                <!-- Load More Button -->
+                                <div class="text-center pt-4">
+                                    <button id="load-more-entries" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 hidden">
+                                        Load More
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insight tab content -->
+                <div id="content-insight" class="tab-content hidden h-full p-4">
+                    <div class="max-w-3xl mx-auto px-4">
+                        <!-- Sign in prompt -->
+                        <div class="mx-4 mt-4 p-4 bg-black/20 mystical-glass rounded-lg">
+                            <div class="flex items-center gap-2 mb-3">
+                                <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                                <p class="text-sm text-white/80">You're viewing sample dream insights. Sign in to analyze your own dream patterns.</p>
+                            </div>
+                            <button class="ml-6 px-3 py-1 bg-white/5 hover:bg-white/10 text-white/80 rounded-md border border-white/10">
+                                Sign in
+                            </button>
+                        </div>
+
+                        <!-- Pattern Analysis -->
+                        <div class="mt-4 bg-white/5 mystical-glass rounded-lg">
+                            <div class="p-4 border-b border-white/10">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h2 class="text-lg font-mono text-white">Pattern Analysis</h2>
+                                        <p class="text-sm text-white/60">Understanding your dream patterns over time</p>
+                                    </div>
+                                    <span class="text-xs px-2 py-1 bg-black/20 text-white/80 border border-white/10 rounded-full">Sample Data</span>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <!-- Tabs -->
+                                <div class="tabs-container">
+                                    <div class="grid w-full grid-cols-3 bg-black/20 rounded-lg p-1 gap-1 mb-4">
+                                        <button class="tab-trigger active py-2 px-4 rounded-md text-white text-sm transition-all">Weekly</button>
+                                        <button class="tab-trigger py-2 px-4 rounded-md text-white/60 text-sm hover:bg-white/5 transition-all">Monthly</button>
+                                        <button class="tab-trigger py-2 px-4 rounded-md text-white/60 text-sm hover:bg-white/5 transition-all">Yearly</button>
+                                    </div>
+
+                                    <!-- Weekly Content -->
+                                    <div class="tab-panel active">
+                                        <div class="p-4 rounded-lg bg-black/20 border border-white/10">
+                                            <h3 class="font-mono text-white mb-2">This Week's Themes:</h3>
+                                            <ul class="list-disc list-inside mb-4 text-white/60 text-sm">
+                                                <li>exploration</li>
+                                                <li>freedom</li>
+                                                <li>personal growth</li>
+                                            </ul>
+                                            <div class="flex items-start gap-2">
+                                                <svg class="w-5 h-5 text-white/80 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                                </svg>
+                                                <p class="text-sm text-white/60">Your dreams consistently show themes of exploration and personal growth. The recurring symbols of mountains and flying suggest a strong desire for achievement and breaking free from limitations.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Dream Symbols -->
+                        <div class="mt-4 bg-white/5 mystical-glass rounded-lg">
+                            <div class="p-4 border-b border-white/10">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h2 class="text-lg font-mono text-white">Recent Dream Symbols</h2>
+                                        <p class="text-sm text-white/60">Common symbols and their meanings in your dreams</p>
+                                    </div>
+                                    <span class="text-xs px-2 py-1 bg-black/20 text-white/80 border border-white/10 rounded-full">Sample Data</span>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="space-y-4">
+                                    <!-- Dream Symbol Card -->
+                                    <div class="p-4 rounded-lg bg-black/20 border border-white/10">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <h3 class="font-mono text-white">Flying Over Mountains</h3>
+                                            <svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <div class="flex items-start gap-2 text-sm text-white/60">
+                                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                                <div>
+                                                    <span class="font-medium text-white">Mountains</span>
+                                                    <p>Challenges or personal growth</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-start gap-2 text-sm text-white/60">
+                                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                                </svg>
+                                                <div>
+                                                    <span class="font-medium text-white">Flying</span>
+                                                    <p>Freedom or ambition</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile overlay -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"></div>
+    </div>
+
+</body>
+</html>
